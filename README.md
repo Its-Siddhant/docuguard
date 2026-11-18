@@ -110,7 +110,7 @@ Planned development milestones:
 
 **Siddhant Jain**
 
-Computer Science & Engineering|Technical Writing|AI
+Computer Science & Engineering | Technical Writing | AI
 
 [LinkedIn](https://www.linkedin.com/in/the-siddhant-jain/)
 
