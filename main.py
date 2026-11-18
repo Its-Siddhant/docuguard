@@ -17,11 +17,17 @@ def main():
         help="Path to the Markdown file to audit"
     )
 
+    parser.add_argument(
+        "--ai",
+        action="store_true",
+        help="Enable AI-assisted documentation analysis"
+    )
+
     args = parser.parse_args()
 
     file_path = Path(args.file)
 
-    if not file_path.exists():
+    if not file_path.exists() or not file_path.is_file():
         print(f"Error: File not found: {file_path}")
         return
 
@@ -36,9 +42,29 @@ def main():
     findings = audit_markdown(content, file_path)
     findings.extend(check_terminology(content))
 
+    ai_analysis = None
+
+    if args.ai:
+        print("Running AI-assisted analysis...\n")
+
+        try:
+            from docuguard.ai_analyzer import analyze_documentation
+
+            ai_analysis = analyze_documentation(content)
+
+            print(
+                f"AI suggestions: "
+                f"{len(ai_analysis['suggestions'])}"
+            )
+
+        except Exception as error:
+            print(f"AI analysis failed: {error}")
+            print("Continuing with deterministic findings only.")
+
     report = generate_report(
         file_path.name,
-        findings
+        findings,
+        ai_analysis
     )
 
     reports_directory = Path("reports")
@@ -47,8 +73,8 @@ def main():
     report_path = reports_directory / "audit_report.md"
     report_path.write_text(report, encoding="utf-8")
 
-    print("Audit completed successfully.")
-    print(f"Total findings: {len(findings)}")
+    print("\nAudit completed.")
+    print(f"Deterministic findings: {len(findings)}")
     print(f"Report generated: {report_path.resolve()}")
 
 

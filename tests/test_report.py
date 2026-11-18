@@ -13,8 +13,10 @@ class TestReport(unittest.TestCase):
 
     def test_empty_findings(self):
         report = generate_report("README.md", [])
-
-        self.assertIn("No documentation issues detected.", report)
+        self.assertIn(
+        "No deterministic documentation issues detected.",
+        report
+    )
 
     def test_report_counts_findings(self):
         findings = [
